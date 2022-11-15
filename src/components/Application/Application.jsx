@@ -1,14 +1,53 @@
 import { useForm } from "react-hook-form";
 import "./Application.css";
+import axios from "../../axios";
+import React from "react";
+import jwt_decode from "jwt-decode";
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Application() {
+  const generateError = (error) =>
+    toast.error(error, {
+      position: "top-right",
+    });
+  const [cookies] = useCookies([]);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    const token = cookies.jwt;
+    const decoded = await jwt_decode(token);
+    const datas = {
+      userId: decoded.id,
+      name: data.name,
+      phone: data.phone,
+      address: data.address,
+      city: data.city,
+      state: data.state,
+      email: data.email,
+      Discribe_Your_Company_And_Products: data.company_and_products,
+      company_name: data.company_name,
+      competitive_advantage: data.competitive_advantage,
+      incubation_type: data.incubation_type,
+      market_plan: data.market_plan,
+      market_size: data.market_size,
+      problem: data.problem,
+      proposal: data.proposal,
+      revenue_model: data.revenue_model,
+      solution: data.solution,
+      team_and_background: data.team_and_background,
+      value_proposition: data.value_proposition,
+    };
+
+    axios.post("/api/user/application", datas).then((response) => {
+      if (response.status) navigate("/");
+      else generateError(response.error.message)
+    });
   };
   return (
     <>
@@ -31,7 +70,7 @@ function Application() {
                     required: true,
                     minLength: 4,
                     maxLength: 20,
-                    pattern:/^[^\s]+(?:$|.*[^\s]+$)/
+                    pattern: /^[^\s]+(?:$|.*[^\s]+$)/,
                   })}
                 />
                 <span className="text-danger">
@@ -44,7 +83,7 @@ function Application() {
                   {errors.name?.type === "maxLength" && (
                     <span>name must less than 20 Character</span>
                   )}
-                  {errors.name?.type === 'pattern' && (
+                  {errors.name?.type === "pattern" && (
                     <span>Should not have spaces</span>
                   )}
                 </span>
@@ -58,7 +97,7 @@ function Application() {
                     required: true,
                     minLength: 4,
                     maxLength: 50,
-                    pattern:/^[^\s]+(?:$|.*[^\s]+$)/
+                    pattern: /^[^\s]+(?:$|.*[^\s]+$)/,
                   })}
                 />
                 <span className="text-danger">
@@ -71,7 +110,7 @@ function Application() {
                   {errors.address?.type === "maxLength" && (
                     <span>address must less than 50 Character</span>
                   )}
-                  {errors.address?.type === 'pattern' && (
+                  {errors.address?.type === "pattern" && (
                     <span>Should not have spaces</span>
                   )}
                 </span>
@@ -88,7 +127,7 @@ function Application() {
                     required: true,
                     minLength: 4,
                     maxLength: 20,
-                    pattern:/^[^\s]+(?:$|.*[^\s]+$)/
+                    pattern: /^[^\s]+(?:$|.*[^\s]+$)/,
                   })}
                 />
                 <span className="text-danger">
@@ -101,7 +140,7 @@ function Application() {
                   {errors.city?.type === "maxLength" && (
                     <span>city must less than 20 Character</span>
                   )}
-                  {errors.city?.type === 'pattern' && (
+                  {errors.city?.type === "pattern" && (
                     <span>Should not have spaces</span>
                   )}
                 </span>
@@ -116,7 +155,7 @@ function Application() {
                     required: true,
                     minLength: 4,
                     maxLength: 20,
-                    pattern:/^[^\s]+(?:$|.*[^\s]+$)/
+                    pattern: /^[^\s]+(?:$|.*[^\s]+$)/,
                   })}
                 />
                 <span className="text-danger">
@@ -129,7 +168,7 @@ function Application() {
                   {errors.state?.type === "maxLength" && (
                     <span>state must less than 20 Character</span>
                   )}
-                  {errors.state?.type === 'pattern' && (
+                  {errors.state?.type === "pattern" && (
                     <span>Should not have spaces</span>
                   )}
                 </span>
@@ -169,7 +208,6 @@ function Application() {
                     maxLength: 10,
                     // valueAsNumber:[true,'helooooooo']
                   })}
-                  
                 />
                 <span className="text-danger">
                   {errors.phone?.type === "required" && (
@@ -201,7 +239,7 @@ function Application() {
                     required: true,
                     minLength: 4,
                     maxLength: 20,
-                    pattern:/^[^\s]+(?:$|.*[^\s]+$)/
+                    pattern: /^[^\s]+(?:$|.*[^\s]+$)/,
                   })}
                 />
                 <span className="text-danger">
@@ -216,7 +254,7 @@ function Application() {
                   {errors.company_name?.type === "maxLength" && (
                     <span>this feild must less than 20 Character</span>
                   )}
-                  {errors.company_name?.type === 'pattern' && (
+                  {errors.company_name?.type === "pattern" && (
                     <span>Should not have spaces</span>
                   )}
                 </span>
@@ -243,7 +281,7 @@ function Application() {
                   required: true,
                   minLength: 4,
                   maxLength: 500,
-                  pattern:/^[^\s]+(?:$|.*[^\s]+$)/
+                  pattern: /^[^\s]+(?:$|.*[^\s]+$)/,
                 })}
               />
               <span className="text-danger">
@@ -256,9 +294,9 @@ function Application() {
                 {errors.team_and_background?.type === "maxLength" && (
                   <span>this feild must less than 500 Character</span>
                 )}
-                {errors.team_and_background?.type === 'pattern' && (
-                    <span>Should not have spaces</span>
-                  )}
+                {errors.team_and_background?.type === "pattern" && (
+                  <span>Should not have spaces</span>
+                )}
               </span>
             </div>
             <div className="row">
@@ -269,7 +307,7 @@ function Application() {
                   required: true,
                   minLength: 4,
                   maxLength: 500,
-                  pattern:/^[^\s]+(?:$|.*[^\s]+$)/
+                  pattern: /^[^\s]+(?:$|.*[^\s]+$)/,
                 })}
               />
               <span className="text-danger">
@@ -282,9 +320,9 @@ function Application() {
                 {errors.company_and_products?.type === "maxLength" && (
                   <span>this feild must less than 500 Character</span>
                 )}
-                {errors.team_and_background?.type === 'pattern' && (
-                    <span>Should not have spaces</span>
-                  )}
+                {errors.team_and_background?.type === "pattern" && (
+                  <span>Should not have spaces</span>
+                )}
               </span>
             </div>
             <div className="row">
@@ -295,7 +333,7 @@ function Application() {
                   required: true,
                   minLength: 4,
                   maxLength: 500,
-                  pattern:/^[^\s]+(?:$|.*[^\s]+$)/
+                  pattern: /^[^\s]+(?:$|.*[^\s]+$)/,
                 })}
               />
               <span className="text-danger">
@@ -308,9 +346,9 @@ function Application() {
                 {errors.problem?.type === "maxLength" && (
                   <span>this feild must less than 500 Character</span>
                 )}
-                {errors.problem?.type === 'pattern' && (
-                    <span>Should not have spaces</span>
-                  )}
+                {errors.problem?.type === "pattern" && (
+                  <span>Should not have spaces</span>
+                )}
               </span>
             </div>
             <div className="row">
@@ -321,7 +359,7 @@ function Application() {
                   required: true,
                   minLength: 4,
                   maxLength: 500,
-                  pattern:/^[^\s]+(?:$|.*[^\s]+$)/
+                  pattern: /^[^\s]+(?:$|.*[^\s]+$)/,
                 })}
               />
               <span className="text-danger">
@@ -334,9 +372,9 @@ function Application() {
                 {errors.solution?.type === "maxLength" && (
                   <span>this feild must less than 500 Character</span>
                 )}
-                {errors.solution?.type === 'pattern' && (
-                    <span>Should not have spaces</span>
-                  )}
+                {errors.solution?.type === "pattern" && (
+                  <span>Should not have spaces</span>
+                )}
               </span>
             </div>
             <div className="row">
@@ -347,7 +385,7 @@ function Application() {
                   required: true,
                   minLength: 4,
                   maxLength: 500,
-                  pattern:/^[^\s]+(?:$|.*[^\s]+$)/
+                  pattern: /^[^\s]+(?:$|.*[^\s]+$)/,
                 })}
               />
               <span className="text-danger">
@@ -360,12 +398,12 @@ function Application() {
                 {errors.value_proposition?.type === "maxLength" && (
                   <span>this feild must less than 500 Character</span>
                 )}
-                {errors.value_proposition?.type === 'pattern' && (
-                    <span>Should not have spaces</span>
-                  )}
+                {errors.value_proposition?.type === "pattern" && (
+                  <span>Should not have spaces</span>
+                )}
               </span>
             </div>
-          
+
             <div className="row">
               <label>
                 Who are your competitors and what is your competative advantage?
@@ -376,7 +414,7 @@ function Application() {
                   required: true,
                   minLength: 4,
                   maxLength: 500,
-                  pattern:/^[^\s]+(?:$|.*[^\s]+$)/
+                  pattern: /^[^\s]+(?:$|.*[^\s]+$)/,
                 })}
               />
               <span className="text-danger">
@@ -389,9 +427,9 @@ function Application() {
                 {errors.competitive_advantage?.type === "maxLength" && (
                   <span>this feild must less than 500 Character</span>
                 )}
-                {errors.competitive_advantage?.type === 'pattern' && (
-                    <span>Should not have spaces</span>
-                  )}
+                {errors.competitive_advantage?.type === "pattern" && (
+                  <span>Should not have spaces</span>
+                )}
               </span>
             </div>
             <div className="row">
@@ -402,7 +440,7 @@ function Application() {
                   required: true,
                   minLength: 4,
                   maxLength: 500,
-                  pattern:/^[^\s]+(?:$|.*[^\s]+$)/
+                  pattern: /^[^\s]+(?:$|.*[^\s]+$)/,
                 })}
               />
               <span className="text-danger">
@@ -415,9 +453,9 @@ function Application() {
                 {errors.revenue_model?.type === "maxLength" && (
                   <span>this feild must less than 500 Character</span>
                 )}
-                {errors.revenue_model?.type === 'pattern' && (
-                    <span>Should not have spaces</span>
-                  )}
+                {errors.revenue_model?.type === "pattern" && (
+                  <span>Should not have spaces</span>
+                )}
               </span>
             </div>
             <div className="row">
@@ -428,7 +466,7 @@ function Application() {
                   required: true,
                   minLength: 4,
                   maxLength: 500,
-                  pattern:/^[^\s]+(?:$|.*[^\s]+$)/
+                  pattern: /^[^\s]+(?:$|.*[^\s]+$)/,
                 })}
               />
               <span className="text-danger">
@@ -441,9 +479,9 @@ function Application() {
                 {errors.market_size?.type === "maxLength" && (
                   <span>this feild must less than 500 Character</span>
                 )}
-                {errors.market_size?.type === 'pattern' && (
-                    <span>Should not have spaces</span>
-                  )}
+                {errors.market_size?.type === "pattern" && (
+                  <span>Should not have spaces</span>
+                )}
               </span>
             </div>
             <div className="row">
@@ -456,7 +494,7 @@ function Application() {
                   required: true,
                   minLength: 4,
                   maxLength: 500,
-                  pattern:/^[^\s]+(?:$|.*[^\s]+$)/
+                  pattern: /^[^\s]+(?:$|.*[^\s]+$)/,
                 })}
               />
               <span className="text-danger">
@@ -469,9 +507,9 @@ function Application() {
                 {errors.market_plan?.type === "maxLength" && (
                   <span>this feild must less than 500 Character</span>
                 )}
-                {errors.market_plan?.type === 'pattern' && (
-                    <span>Should not have spaces</span>
-                  )}
+                {errors.market_plan?.type === "pattern" && (
+                  <span>Should not have spaces</span>
+                )}
               </span>
             </div>
             <div className="form-check">
@@ -517,7 +555,7 @@ function Application() {
                   required: true,
                   minLength: 4,
                   maxLength: 500,
-                  pattern:/^[^\s]+(?:$|.*[^\s]+$)/
+                  pattern: /^[^\s]+(?:$|.*[^\s]+$)/,
                 })}
               />
               <span className="text-danger">
@@ -530,9 +568,9 @@ function Application() {
                 {errors.proposal?.type === "maxLength" && (
                   <span>this feild must less than 500 Character</span>
                 )}
-                {errors.proposal?.type === 'pattern' && (
-                    <span>Should not have spaces</span>
-                  )}
+                {errors.proposal?.type === "pattern" && (
+                  <span>Should not have spaces</span>
+                )}
               </span>
             </div>
             <div className="d-flex justify-content-center pt-4">

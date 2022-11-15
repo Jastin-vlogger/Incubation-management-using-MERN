@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useContext} from "react";
 import axios from "../../axios";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import { UserData } from "../../store/DbContext";
 
 function Login() {
+  const { setUser } = useContext(UserData);
   const navigate = useNavigate();
   const initialValues = { email: " ", password: "" };
   const [formValues, setFormValues] = useState(initialValues);
@@ -32,24 +34,19 @@ function Login() {
     if (Object.keys(formErrors).length === 0 && isSubmit) {
       console.log(formValues);
       axios
-        .post(
-          "/api/user/login",
-          {
-            email: formValues.email,
-            password: formValues.password,
-          }
-        )
+        .post("/api/user/login", {
+          email: formValues.email,
+          password: formValues.password,
+        })
         .then((response) => {
           if (
             response.data === "User not found" ||
             response.data === "Please check your password"
           ) {
-            // let a = {
-            //   email: response.data,
-            // };
-            generateError(response.data)
+            generateError(response.data);
           } else {
-            navigate("/",{replace:true});
+            setUser(response);
+            navigate("/", { replace: true });
           }
         });
     }
@@ -62,7 +59,7 @@ function Login() {
       errors.email = "Email is required!";
     } else if (!regex.test(values.email)) {
       const error = "This is not a valid email format!";
-      generateError(error)
+      generateError(error);
     }
     if (!values.password) {
       errors.password = "Password is required";

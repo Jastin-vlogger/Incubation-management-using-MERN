@@ -6,7 +6,6 @@ import Signup from "./pages/Signup";
 import "react-toastify/dist/ReactToastify.css";
 import Application from "./pages/Application";
 import DbContext from "./store/DbContext";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import AdminLoginPage from "./pages/admin/AdminLogin";
 import AdminLogin from "./pages/admin/Home";

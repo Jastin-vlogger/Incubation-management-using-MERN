@@ -9,6 +9,8 @@ import DbContext from "./store/DbContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AdminLoginPage from "./pages/admin/AdminLogin";
 import AdminLogin from "./pages/admin/Home";
+import BookSlotPage from "./pages/admin/BookSlot";
+import UserManage from "./pages/admin/UserManage";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
           <Route exact path="/apply" element={<Application />} />
           <Route exact path="/admin/login" element={<AdminLoginPage />} />
           <Route exact path="/admin" element={<AdminLogin />} />
+          <Route exact path="/admin/bookSlot" element={<BookSlotPage />} />
+          <Route exact path="/admin/manageuser" element={<UserManage />} />
         </Routes>
       </BrowserRouter>
     </DbContext>

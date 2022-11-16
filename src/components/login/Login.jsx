@@ -5,7 +5,6 @@ import { ToastContainer, toast } from "react-toastify";
 import { UserData } from "../../store/DbContext";
 
 function Login() {
-  const { setUser } = useContext(UserData);
   const navigate = useNavigate();
   const initialValues = { email: " ", password: "" };
   const [formValues, setFormValues] = useState(initialValues);
@@ -45,7 +44,6 @@ function Login() {
           ) {
             generateError(response.data);
           } else {
-            setUser(response);
             navigate("/", { replace: true });
           }
         });

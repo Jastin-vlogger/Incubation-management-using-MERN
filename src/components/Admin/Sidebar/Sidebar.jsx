@@ -13,8 +13,9 @@ function Sidebar() {
   return (
     <section className="sidebar">
       <ul>
-        <li>Application List</li>
-        <li>Booking Slot</li>
+        <li onClick={()=>navigate('/admin')}>Application List</li>
+        <li onClick={()=>navigate('/admin/bookSlot')}>Booking Slot</li>
+        <li onClick={()=>navigate('/admin/manageuser')}>User Management</li>
         <li onClick={logOut}>LogOut</li>
       </ul>
     </section>

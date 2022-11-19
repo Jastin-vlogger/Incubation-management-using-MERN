@@ -47,12 +47,8 @@ function Header() {
     <>
       <Navbar bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand href="/">Navbar</Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link>Home</Nav.Link>
-            <Nav.Link>Features</Nav.Link>
-            <Nav.Link>Pricing</Nav.Link>
-          </Nav>
+          <Navbar.Brand href="/">Incubation</Navbar.Brand>
+          
           <Nav>
             <NavDropdown title={user?user.data.name:'hello'}>
               <NavDropdown.Item onClick={logOut}>Logout</NavDropdown.Item>

@@ -16,13 +16,13 @@ function Dashboard() {
     axios.get("/api/admin/getCompaniesInfo").then((response) => {
       console.log(response.data);
       setInfo(response.data);
-      setApplication(response.data);
     });
   });
 
   const openModel = (application) => {
     console.log(application);
     setSelectedApplication(application);
+    console.log(selectedApplication);
   };
 
   return (
@@ -34,7 +34,7 @@ function Dashboard() {
         <div className="col-md-10">
           <section className="admin">
             <div className="new-application">
-              <h1 className="mx-2">APPROVED APPLICATION</h1>
+              <h1 className="mx-2">NEW APPLICATION</h1>
               <table className="table align-middle mb-0 bg-white table-bordered">
                 <thead className="bg-light text-center">
                   <tr>

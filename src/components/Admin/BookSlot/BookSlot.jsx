@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import axios from "../../../axios";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
+import { toast } from "react-toastify";
 
 function BookSlot() {
-  const [choose, setChoose] = useState({});
+  const [info, setInfo] = useState([]);
   let [slots, setSlots] = useState({
     A: [],
     B: [],
@@ -14,12 +16,54 @@ function BookSlot() {
     G: [],
     H: [],
   });
-  const A = [{}, {}, {}, {}];
-  const B = [{}, {}, {}, {}];
-  const C = [{}, {}, {}, {}];
-  const D = [{}, {}, {}, {}];
-  const E = [{}, {}, {}, {}];
+  const [choosedSlot, setChoosedSlot] = useState({});
+  let [modalData, setModalData] = useState();
+  const [selectSlot, setSelectSlot] = useState();
+  const [companyName, setCompanyName] = useState();
 
+  const generateError = (error) =>
+    toast.error(error, {
+      position: "top-right",
+    });
+
+  function getSlotsDetails() {
+    axios.get("/api/admin/getSlots").then(({ data }) => {
+      console.log(data[0]);
+      setSlots(data[0]);
+    });
+  }
+
+  useEffect(() => {
+    console.log(info);
+    getSlotsDetails();
+    setis();
+  }, [slots.isAlloted]);
+
+  const setis = () => {
+    axios.get("/api/admin/getApprovedCompanies").then((response) => {
+      console.log(response.data);
+      setInfo(response.data);
+    });
+  };
+
+  const slotSelected = () => {
+    const data = {
+      company: selectSlot,
+      ...choosedSlot,
+      isAlloted: modalData ? true : false,
+    };
+    // console.log(data);
+    axios.patch("/api/admin/bookSlot", data).then((response) => {
+      console.log(response.data);
+      if (response.data.status) {
+        getSlotsDetails();
+        // setCompanyName(selectSlot);
+      } else {
+        let error = "Something error occured";
+        generateError(error);
+      }
+    });
+  };
   return (
     <React.Fragment>
       <div className="row" style={{ height: "100vh" }}>
@@ -30,11 +74,12 @@ function BookSlot() {
           <h1>Book Slots</h1>
           <div className="d-flex ">
             <div className="d-flex mb-3 flex-fill text-center">
-              {A.map((slotItem, index) => {
-                console.log(index);
+              {slots.A.map((slotItem, index) => {
                 return (
                   <div
-                    onClick={() => setChoose({ slot: "A", index: index })}
+                    onClick={() =>
+                      setChoosedSlot({ slotName: "A", position: index })
+                    }
                     data-bs-toggle="modal"
                     data-bs-target="#staticBackdrop"
                     key={index}
@@ -53,10 +98,13 @@ function BookSlot() {
 
             <div className=" m-1" style={{ width: "15px" }}></div>
             <div className="d-flex mb-3 flex-fill text-center align-middle">
-              {B.map((slotItem, index) => {
+              {slots.B.map((slotItem, index) => {
                 return (
                   <div
                     data-bs-toggle="modal"
+                    onClick={() =>
+                      setChoosedSlot({ slotName: "B", position: index })
+                    }
                     data-bs-target="#staticBackdrop"
                     key={index}
                     className="p-2 flex-fill text-white m-1"
@@ -75,9 +123,12 @@ function BookSlot() {
           <div className=" m-1" style={{ width: "100%", height: "10px" }}></div>
           <div className="d-flex ">
             <div className="d-flex mb-3 flex-fill text-center">
-              {D.map((slotItem, index) => {
+              {slots.D.map((slotItem, index) => {
                 return (
                   <div
+                    onClick={() =>
+                      setChoosedSlot({ slotName: "D", position: index })
+                    }
                     data-bs-toggle="modal"
                     data-bs-target="#staticBackdrop"
                     key={index}
@@ -95,9 +146,12 @@ function BookSlot() {
             </div>
             <div className=" m-1" style={{ width: "15px" }}></div>
             <div className="d-flex mb-3 flex-fill text-center align-middle">
-              {C.map((slotItem, index) => {
+              {slots.C.map((slotItem, index) => {
                 return (
                   <div
+                    onClick={() =>
+                      setChoosedSlot({ slotName: "C", position: index })
+                    }
                     data-bs-toggle="modal"
                     data-bs-target="#staticBackdrop"
                     key={index}
@@ -141,7 +195,19 @@ function BookSlot() {
             </div>
             <div className="container">
               <div className="form-group">
-                <select className="browser-default custom-select mb-3">
+                <select
+                  className="browser-default custom-select mb-3"
+                  onChange={(e) => setSelectSlot(e.target.value)}
+                >
+                  {info.map((hello, index) => {
+                    return (
+                      <>
+                        <option value={hello.company_name}>
+                          {hello.company_name}
+                        </option>
+                      </>
+                    );
+                  })}
                   <option value="">Remove Company</option>
                 </select>
               </div>
@@ -149,7 +215,10 @@ function BookSlot() {
 
             <div className="modal-footer">
               <Link
-                to="/admin/bookinSlots"
+                onClick={() => {
+                  slotSelected();
+                }}
+                to="/admin/bookSlot"
                 className="btn btn-primary"
                 data-bs-dismiss="modal"
               >

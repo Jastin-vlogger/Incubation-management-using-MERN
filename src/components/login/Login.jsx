@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "../../axios";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -40,7 +40,8 @@ function Login() {
         .then((response) => {
           if (
             response.data === "User not found" ||
-            response.data === "Please check your password"
+            response.data === "Please check your password" ||
+            response.data === "You are blocked"
           ) {
             generateError(response.data);
           } else {

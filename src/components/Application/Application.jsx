@@ -20,6 +20,11 @@ function Application() {
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
+    const formData = new FormData();
+    formData.append("file", data.file[0]);
+    console.log(formData);
+    console.log(data.file[0]);
+
     const token = cookies.jwt;
     const decoded = await jwt_decode(token);
     const datas = {
@@ -44,9 +49,29 @@ function Application() {
       value_proposition: data.value_proposition,
     };
 
-    axios.post("/api/user/application", datas).then((response) => {
-      if (response.status) navigate("/");
-      else generateError(response.error.message)
+    axios.post("/api/user/application", datas).then(async (response) => {
+      console.log(response.data);
+      if (response.data.status) {
+        let id = response.data.id
+        await axios
+          .post(
+            `/api/user/upload-file/${id}`,
+            {
+              body: formData,
+            },
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          )
+          .then(({ data }) => {
+            alert(data)
+            navigate("/");
+          });
+      } else {
+        generateError(response.error.message);
+      }
     });
   };
   return (
@@ -265,10 +290,7 @@ function Application() {
                 <input
                   type="file"
                   className="form-control"
-
-                  // {...register("image", {
-                  //   required: true,
-                  // })}
+                  {...register("file")}
                 />
                 <span className="text-danger"></span>
               </div>

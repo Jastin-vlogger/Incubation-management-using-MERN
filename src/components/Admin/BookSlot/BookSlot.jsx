@@ -3,8 +3,12 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import { toast } from "react-toastify";
+import { useCookies } from "react-cookie";
+import jwt_decode from "jwt-decode";
+
 
 function BookSlot() {
+  const [cookies] = useCookies([]);
   const [info, setInfo] = useState([]);
   let [slots, setSlots] = useState({
     A: [],
@@ -17,9 +21,7 @@ function BookSlot() {
     H: [],
   });
   const [choosedSlot, setChoosedSlot] = useState({});
-  let [modalData, setModalData] = useState();
   const [selectSlot, setSelectSlot] = useState();
-  const [companyName, setCompanyName] = useState();
 
   const generateError = (error) =>
     toast.error(error, {
@@ -46,15 +48,19 @@ function BookSlot() {
     });
   };
 
-  const slotSelected = () => {
+  const slotSelected = async() => {
+    const token = cookies.jwt;
+    const decoded = await jwt_decode(token);
+    let userId = decoded.id;
     const data = {
       company: selectSlot,
       ...choosedSlot,
-      isAlloted: modalData ? true : false,
+      isAlloted: choosedSlot ? true : false,
+      // id:userId
     };
     // console.log(data);
     axios.patch("/api/admin/bookSlot", data).then((response) => {
-      console.log(response.data);
+      // console.log(response.data);
       if (response.data.status) {
         getSlotsDetails();
         // setCompanyName(selectSlot);
@@ -74,7 +80,7 @@ function BookSlot() {
           <h1>Book Slots</h1>
           <div className="d-flex ">
             <div className="d-flex mb-3 flex-fill text-center">
-              {slots.A.map((slotItem, index) => {
+              {slots?.A?.map((slotItem, index) => {
                 return (
                   <div
                     onClick={() =>
@@ -87,7 +93,7 @@ function BookSlot() {
                     style={{
                       height: "120px",
                       width: "50px",
-                      background: (slotItem.company && "#5C8C46") || "#889C9B",
+                      background: (slotItem.company && " #cc00cc") || "#889C9B",
                     }}
                   >
                     <p>{slotItem.company || "Add new company"}</p>
@@ -111,7 +117,7 @@ function BookSlot() {
                     style={{
                       height: "120px",
                       width: "50px",
-                      background: (slotItem.company && "#5C8C46") || "#889C9B",
+                      background: (slotItem.company && " #cc00cc") || "#889C9B",
                     }}
                   >
                     <p>{slotItem.company || "Add new company"}</p>
@@ -120,7 +126,7 @@ function BookSlot() {
               })}
             </div>
           </div>
-          <div className=" m-1" style={{ width: "100%", height: "10px" }}></div>
+          <div className=" m-1" style={{ width: "100%", height: "8px" }}></div>
           <div className="d-flex ">
             <div className="d-flex mb-3 flex-fill text-center">
               {slots.D.map((slotItem, index) => {
@@ -208,7 +214,12 @@ function BookSlot() {
                       </>
                     );
                   })}
-                  <option value="">Remove Company</option>
+                  <option
+                    value=""
+                    onChange={(e) => console.log(e.target.value)}
+                  >
+                    Remove Company
+                  </option>
                 </select>
               </div>
             </div>

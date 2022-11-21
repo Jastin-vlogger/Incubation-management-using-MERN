@@ -14,7 +14,7 @@ function Header() {
   const { user } = useContext(UserData);
   console.log(user);
   const navigate = useNavigate();
-  const [cookies, setCookie, removeCookie] = useCookies([]);
+  const [cookies, removeCookie] = useCookies([]);
   useEffect(() => {
     const verifyUser = async () => {
       if (!cookies.jwt) {

@@ -169,6 +169,17 @@ function Dashboard() {
                                       </p>
                                     </div>
                                     <Hr />
+                                    <div className="d-flex justify-content-between ">
+                                      <p className="small">Company Logo</p>
+                                      {
+                                        <img
+                                          style={{ width: "50px" }}
+                                          src={`${axios}/uploads/${selectedApplication._id}.jpg`}
+                                          alt="logo"
+                                        />
+                                      }
+                                    </div>
+                                    <Hr />
                                     <div className="d-flex justify-content-between">
                                       <p className="small">
                                         Discribe the problem you are trying to

@@ -56,7 +56,7 @@ function UserMange() {
                         onClick={() => blockUser(data._id)}
                         class="btn btn-primary"
                       >
-                        BLOCK
+                        UNBLOCK
                       </button>
                     ) : (
                       <button
@@ -64,7 +64,7 @@ function UserMange() {
                         onClick={() => unblockUser(data._id)}
                         class="btn btn-secondary"
                       >
-                        UNBLOCK
+                        BLOCK
                       </button>
                     )}
                   </td>

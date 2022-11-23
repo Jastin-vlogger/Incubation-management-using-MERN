@@ -143,6 +143,17 @@ function Apply() {
                   <p className="small">{selectedApplication.market_size}</p>
                 </div>
                 <Hr />
+                <div className="d-flex justify-content-between ">
+                  <p className="small">Company Logo</p>
+                  {
+                    <img
+                      style={{ width: "50px" }}
+                      src={`http://localhost:3008/uploads/${selectedApplication.userId}.jpg`}
+                      alt="logo"
+                    />
+                  }
+                </div>
+                <Hr />
                 <div className="d-flex justify-content-between">
                   <p className="small">
                     Discribe the problem you are trying to solve

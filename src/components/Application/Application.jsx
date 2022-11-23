@@ -21,9 +21,12 @@ function Application() {
   } = useForm();
   const onSubmit = async (data) => {
     const formData = new FormData();
-    formData.append("file", data.file[0]);
+    formData.append("image", data.file[0]);
     console.log(formData);
     console.log(data.file[0]);
+    for (var pair of formData.entries()) {
+      console.log(pair[0]+ ', ' + pair[1]); 
+  }
 
     const token = cookies.jwt;
     const decoded = await jwt_decode(token);
@@ -52,13 +55,11 @@ function Application() {
     axios.post("/api/user/application", datas).then(async (response) => {
       console.log(response.data);
       if (response.data.status) {
-        let id = response.data.id
+        let id = response.data.id;
         await axios
           .post(
             `/api/user/upload-file/${id}`,
-            {
-              body: formData,
-            },
+            formData,
             {
               headers: {
                 "Content-Type": "multipart/form-data",
@@ -66,7 +67,7 @@ function Application() {
             }
           )
           .then(({ data }) => {
-            alert(data)
+            alert(data);
             navigate("/");
           });
       } else {

@@ -48,9 +48,9 @@ function Header() {
       <Navbar bg="dark" variant="dark">
         <Container>
           <Navbar.Brand href="/">Incubation</Navbar.Brand>
-          
+
           <Nav>
-            <NavDropdown title={user?user.data.name:'hello'}>
+            <NavDropdown title={user ? user.data.name : "hello"}>
               <NavDropdown.Item onClick={logOut}>Logout</NavDropdown.Item>
             </NavDropdown>
           </Nav>
